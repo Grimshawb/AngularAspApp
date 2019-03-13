@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NG_Core_Auth.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace NG_Core_Auth
 {
@@ -27,6 +29,18 @@ namespace NG_Core_Auth
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            // Enable CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials().Build();
+                });
+            });
+
+            // Connect to DB
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +56,8 @@ namespace NG_Core_Auth
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors("EnableCORS");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -607,3 +607,5 @@ yarn-error.log
 
 # User specific bazel settings
 .bazelrc.user
+
+NG_Core/NG_Core_Auth/appsettings\.json
