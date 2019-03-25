@@ -37,7 +37,7 @@ namespace NG_Core_Auth.Controllers
         /// </summary>
         /// <returns>The register.</returns>
         /// <param name="formData">Form data.</param>
-        [HttpPost("action")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Register( [FromBody] RegisterViewModel formData) 
         {
             List<String> errorList = new List<string>();
@@ -70,7 +70,7 @@ namespace NG_Core_Auth.Controllers
             return BadRequest(new JsonResult(errorList));
         }
 
-        [HttpPost("action")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Login( [FromBody] LoginViewModel formdata)
         {
 
