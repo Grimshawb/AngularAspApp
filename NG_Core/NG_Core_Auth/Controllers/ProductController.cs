@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NG_Core_Auth.Data;
+using NG_Core_Auth.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NG_Core_Auth.Controllers
 {
@@ -22,36 +22,84 @@ namespace NG_Core_Auth.Controllers
         }
 
 
-        // GET: api/values
+
         [HttpGet("[action]")]
         public IActionResult GetProducts()
         {
             return Ok(_db.Products.ToList());
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddProduct([FromBody] ProductModel FormData)
         {
-            return "value";
+            var NewProduct = new ProductModel
+            {
+                Name = FormData.Name,
+                ImageUrl = FormData.ImageUrl,
+                Description = FormData.Description,
+                OutOfStock = FormData.OutOfStock,
+                Price = FormData.Price
+            };
+
+            await _db.Products.AddAsync(NewProduct);
+            await _db.SaveChangesAsync();
+
+            return Ok();
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+
+
+        [HttpPut("[action]")]
+        public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductModel FormData)
         {
+
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var findProd = _db.Products.FirstOrDefault(p => p.ProductID == id);
+            if(findProd == null)
+            {
+                return NotFound();
+            }
+
+            findProd.Name = FormData.Name;
+            findProd.ImageUrl = FormData.ImageUrl;
+            findProd.Description = FormData.Description;
+            findProd.OutOfStock = FormData.OutOfStock;
+            findProd.Price = FormData.Price;
+
+            _db.Entry(findProd).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new JsonResult("The product: " + findProd.Name + " with id: " + id + " has been updated successfully."));
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        [HttpDelete("[action]")]
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var findProd = await _db.Products.FindAsync(id);
+            if (findProd == null)
+            {
+                return NotFound();
+            }
+
+            _db.Products.Remove(findProd);
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new JsonResult("The product with id: " + id + " has been removed successfully."));
         }
     }
 }
