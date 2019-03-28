@@ -93,6 +93,16 @@ namespace NG_Core_Auth
             });
 
             // ******************* Token Setup *******************
+
+            // ******************* Role Authorization *******************
+
+            services.AddAuthorization(options => 
+            {
+                options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("Admin", "Customer", "Moderator").RequireAuthenticatedUser());
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+            });
+
+            // ******************* Role Authorization *******************
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

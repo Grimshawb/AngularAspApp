@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NG_Core_Auth.Data;
 using NG_Core_Auth.Models;
@@ -24,6 +25,7 @@ namespace NG_Core_Auth.Controllers
 
 
         [HttpGet("[action]")]
+        [Authorize(Policy = "RequireLoggedIn")]
         public IActionResult GetProducts()
         {
             return Ok(_db.Products.ToList());
@@ -32,6 +34,7 @@ namespace NG_Core_Auth.Controllers
 
 
         [HttpPost("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel FormData)
         {
             var NewProduct = new ProductModel
@@ -52,6 +55,7 @@ namespace NG_Core_Auth.Controllers
 
 
         [HttpPut("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductModel FormData)
         {
 
@@ -82,6 +86,7 @@ namespace NG_Core_Auth.Controllers
 
 
         [HttpDelete("[action]")]
+        [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)
