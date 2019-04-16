@@ -54,7 +54,7 @@ namespace NG_Core_Auth.Controllers
 
 
 
-        [HttpPut("[action]")]
+        [HttpPut("[action]/{id}")]
         [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductModel FormData)
         {
@@ -85,7 +85,7 @@ namespace NG_Core_Auth.Controllers
 
 
 
-        [HttpDelete("[action]")]
+        [HttpDelete("[action]/{id}")]
         [Authorize(Policy = "RequireAdministratorRole")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
