@@ -609,3 +609,9 @@ yarn-error.log
 .bazelrc.user
 
 NG_Core/NG_Core_Auth/appsettings\.json
+
+NG_Core/NG_Core_Auth/wwwroot/Images/sally\.jpg
+
+NG_Core/NG_Core_Auth/wwwroot/Images/oogieboogie\.jpg
+
+NG_Core/NG_Core_Auth/wwwroot/Images/jack\.jpg
